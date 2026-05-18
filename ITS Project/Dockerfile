@@ -4,4 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["node", "--version"]
+EXPOSE 3000
+
+CMD ["sh", "-c", "while true; do echo Running; sleep 30; done"]
