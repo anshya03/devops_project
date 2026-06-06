@@ -15,7 +15,6 @@ pipeline {
                 url: 'https://github.com/anshya03/devops_project.git'
             }
         }
-        
 
         stage('Install Dependencies') {
             steps {
@@ -30,12 +29,12 @@ pipeline {
 
                     withSonarQubeEnv('sonarqube') {
                         bat """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=anshya03_devops_project \
-                        -Dsonar.organization=anshya03 \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=https://sonarcloud.io \
-                        -Dsonar.token=$SONAR_TOKEN
+                        "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                        -Dsonar.projectKey=anshya03_devops_project ^
+                        -Dsonar.organization=anshya03 ^
+                        -Dsonar.sources=. ^
+                        -Dsonar.host.url=https://sonarcloud.io ^
+                        -Dsonar.token=%SONAR_TOKEN%
                         """
                     }
                 }
@@ -44,35 +43,37 @@ pipeline {
 
         stage('Trivy Filesystem Scan') {
             steps {
-                bat 'trivy fs --exit-code 0 . > trivy-report.txt'    
+                bat 'trivy fs --exit-code 0 . > trivy-report.txt'
             }
         }
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t %IMAGE_NAME% .'
             }
         }
 
         stage('Docker Push') {
             steps {
                 bat '''
-                echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
-                docker push $IMAGE_NAME
+                echo %DOCKER_CREDENTIALS_PSW% | docker login -u %DOCKER_CREDENTIALS_USR% --password-stdin
+                docker push %IMAGE_NAME%
                 '''
             }
         }
+
         stage('Deploy to Render') {
             steps {
                 withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK')]) {
-                    bat 'curl -X POST $RENDER_HOOK'
+                    bat 'curl -X POST %RENDER_HOOK%'
                 }
             }
         }
+
         stage('Deploy Frontend to Netlify') {
             steps {
                 withCredentials([string(credentialsId: 'netlify-build-hook', variable: 'NETLIFY_HOOK')]) {
-                    bat 'curl -X POST $NETLIFY_HOOK'
+                    bat 'curl -X POST %NETLIFY_HOOK%'
                 }
             }
         }
