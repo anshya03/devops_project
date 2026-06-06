@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONAR_TOKEN = credentials('sonar-token')
         DOCKER_CREDENTIALS = credentials('dockerhub')
-        IMAGE_NAME = "anshya03/its-project:${BUILD_NUMBER}"
+        IMAGE_NAME = "anshyaa03/devops-project:${BUILD_NUMBER}"
     }
 
     stages {
