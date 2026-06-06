@@ -27,7 +27,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner'
 
-                    withSonarQubeEnv('SonarCloud') {
+                    withSonarQubeEnv('sonarqube') {
                         bat """
                         "${scannerHome}\\bin\\sonar-scanner.bat" ^
                         -Dsonar.projectKey=anshya03_devops_project ^

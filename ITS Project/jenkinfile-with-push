@@ -15,6 +15,7 @@ pipeline {
                 url: 'https://github.com/anshya03/devops_project.git'
             }
         }
+        
 
         stage('Install Dependencies') {
             steps {
@@ -27,7 +28,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner'
 
-                    withSonarQubeEnv('SonarCloud') {
+                    withSonarQubeEnv('sonarqube') {
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=anshya03_devops_project \
