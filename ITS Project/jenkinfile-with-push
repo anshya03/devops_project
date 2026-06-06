@@ -29,7 +29,7 @@ pipeline {
                     def scannerHome = tool 'SonarScanner'
 
                     withSonarQubeEnv('sonarqube') {
-                        sh """
+                        bat """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=anshya03_devops_project \
                         -Dsonar.organization=anshya03 \
@@ -55,13 +55,13 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Docker Push') {
             steps {
-                sh '''
+                bat '''
                 echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
                 docker push $IMAGE_NAME
                 '''
@@ -70,14 +70,14 @@ pipeline {
         stage('Deploy to Render') {
             steps {
                 withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK')]) {
-                    sh 'curl -X POST $RENDER_HOOK'
+                    bat 'curl -X POST $RENDER_HOOK'
                 }
             }
         }
         stage('Deploy Frontend to Netlify') {
             steps {
                 withCredentials([string(credentialsId: 'netlify-build-hook', variable: 'NETLIFY_HOOK')]) {
-                    sh 'curl -X POST $NETLIFY_HOOK'
+                    bat 'curl -X POST $NETLIFY_HOOK'
                 }
             }
         }
