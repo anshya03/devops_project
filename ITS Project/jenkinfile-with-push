@@ -44,7 +44,7 @@ pipeline {
 
         stage('Trivy Filesystem Scan') {
             steps {
-                sh '''
+                bat '''
                 trivy fs \
                 --skip-db-update \
                 --exit-code 0 \
