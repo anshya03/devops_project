@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        SONAR_TOKEN = credentials('sonar-token')
+        IMAGE_NAME =  "anshya03/its-project:${BUILD_NUMBER}""
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/anshya03/devops_project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip3 install -r backend/requirements.txt'
+                sh 'python3 -m pip install --user bandit'
+            }
+        }
+
+        stage('SonarCloud Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarCloud') {
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=anshya03_devops_project \
+                        -Dsonar.organization=anshya03 \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.token=$SONAR_TOKEN
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Bandit Vulnerability Scan') {
+            steps {
+                sh '$HOME/.local/bin/bandit -r backend -f txt -o bandit-report.txt'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker rm -f its-container || true
+                docker run -d -p 5000:5000 --name its-container $IMAGE_NAME
+                '''
+            }
+        }
+    }
+}
