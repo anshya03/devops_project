@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONAR_TOKEN = credentials('sonar-token')
         DOCKER_CREDENTIALS = credentials('dockerhub')
-        IMAGE_NAME = "tastethethunder/its-project:${BUILD_NUMBER}"
+        IMAGE_NAME = "anshya03/its-project:${BUILD_NUMBER}"
     }
 
     stages {
@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/TasteTheThunder/Smart-Traffic-Advisory-System.git'
+                url: 'https://github.com/anshya03/devops_project.git'
             }
         }
 
@@ -30,8 +30,8 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=TasteTheThunder_Smart-Traffic-Advisory-System \
-                        -Dsonar.organization=tastethethunder \
+                        -Dsonar.projectKey=anshya03_devops_project \
+                        -Dsonar.organization=anshya03 \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.token=$SONAR_TOKEN
