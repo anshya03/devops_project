@@ -17,7 +17,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r backend\\requirements.txt'
+                bat 'pip install -r "ITS Project\\backend\\requirements.txt"'
                 bat 'python -m pip install bandit'
             }
         }
@@ -43,7 +43,7 @@ pipeline {
 
         stage('Bandit Vulnerability Scan') {
             steps {
-                bat 'bandit -r backend -f txt -o bandit-report.txt'
+                bat 'bandit -r "ITS Project\\backend" -f txt -o bandit-report.txt'
             }
         }
 
