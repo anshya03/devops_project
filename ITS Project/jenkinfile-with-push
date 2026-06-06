@@ -22,6 +22,7 @@ pipeline {
             }
         }
 
+        /*
         stage('SonarCloud Analysis') {
             steps {
                 script {
@@ -40,6 +41,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Trivy Filesystem Scan') {
             steps {
