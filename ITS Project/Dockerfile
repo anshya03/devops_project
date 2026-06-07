@@ -18,4 +18,4 @@ ENV PYTHONUNBUFFERED=1
 # Start Flask application
 CMD ["python", "backend/run.py"]
 
-//just a comment to test the commit and push functionality of git
+#just a comment to test the commit and push functionality of git
